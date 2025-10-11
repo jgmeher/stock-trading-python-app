@@ -9,9 +9,17 @@ A simple **Python ETL pipeline** that retrieves all active U.S. stock tickers fr
 ---
 
 ## 🚀 Features  
-- 🔄 Handles **pagination** until all tickers are retrieved  
-- 📊 Extracts essential fields like `ticker`, `name`, `market`, `primary_exchange`, `type`  
-- 💾 Outputs a clean **CSV file (`tickers.csv`)** for further analysis  
+🔄 Handles pagination until all stock tickers are retrieved
+
+📊 Extracts key metadata: ticker, name, market, type, exchange, etc.
+
+🧩 Uses dotenv for secure API and Snowflake credentials
+
+❄️ Loads directly into Snowflake (creates table automatically if missing)
+
+📅 Adds a daily partition column DS for data versioning
+
+🧱 Modular code — can be integrated into Airflow or AWS Lambda
 
 ---
 
@@ -38,7 +46,6 @@ A simple **Python ETL pipeline** that retrieves all active U.S. stock tickers fr
 2. **Create a virtual environment (optional but recommended)**  
    ```bash
    python -m venv .venv
-   source .venv/bin/activate   # Mac/Linux
    .venv\Scripts\activate      # Windows
    ```
 
@@ -62,21 +69,18 @@ python script.py
 ```
 
 This will:  
-✅ Fetch all active stock tickers  
-✅ Print progress as it requests pages  
-✅ Save results into `tickers.csv`  
+✅ Fetches all active stock tickers from Polygon.io
+✅ Prints progress for each page of results
+✅ Writes clean structured data into your Snowflake table:
 
 ---
 
-## 📊 Sample Output (`tickers.csv`)  
+## 📊 Sample Output 
 
-```csv
-ticker,name,market,locale,primary_exchange,type,active,currency_name,cik,last_updated_utc
-AAPL,Apple Inc,stocks,us,XNAS,CS,true,USD,0000320193,2023-09-19T00:00:00Z
-MSFT,Microsoft Corp,stocks,us,XNAS,CS,true,USD,0000789019,2023-09-19T00:00:00Z
+requesting next page https://api.polygon.io/v3/reference/tickers?cursor=...
+Inserted 1000/16000
+Inserted 2000/16000
+Wrote 16000 rows to Snowflake table "MYDB"."PUBLIC"."STOCK_TICKERS"
+
 ```
 
----
-
-## 📜 License  
-This project is licensed under the [MIT License](LICENSE).  
